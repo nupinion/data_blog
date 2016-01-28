@@ -1,5 +1,5 @@
 
-# Wikipedia Data on Gay Rights
+# Wikipedia Data on LGBT Rights
 
 <a href="https://en.wikipedia.org/wiki/LGBT_rights_by_country_or_territory">Wikipedia data</a> will be used to rate national laws regarding LGBT rights.
 
@@ -25,11 +25,11 @@ The final score for a country is the average across all criteria.
 
 ## Extracting the data
 
-First, we get a list of countries and their iso codes (1.... .py).
+First, we get a list of countries and their iso codes (obtaining_data/1. Get iso data.ipynb).
 
 We then carry out data scrubbing manually to create country_matches.csv -- a 2-column csv file where column one has country names as they appear in the LGBT page and column 2 has country names as they appear in the iso table in wikipedia.
 
-Finally, we use the second python script (2.... .py) to extract the lgbt data.
+Finally, we use the second python script (obtaining_data/2.... .py) to extract the lgbt data.
 
 ## Visualisation
 
