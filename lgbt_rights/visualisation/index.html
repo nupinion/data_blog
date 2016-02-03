@@ -1,4 +1,4 @@
-
+<!-- Thanks to: http://techslides.com/demos/d3/d3-world-map-colors-tooltips.html -->
 <!DOCTYPE html>
 <meta charset="utf-8">
 <title>D3 World Map</title>
@@ -11,6 +11,11 @@
 
 
 #map{
+  margin:0 auto;
+  text-align: center;
+}
+
+svg{
   margin:0 auto;
 }
 
@@ -73,9 +78,17 @@ var tooltip = d3.select("#map").append("div")
 queue()
     .defer(d3.json, "world-110m.json")
     .defer(d3.tsv, "world-country-names.tsv")
+    .defer(d3.json, "countries_lgbt.json")
     .await(ready);
 
-function ready(error, world, names) {
+function ready(error, world, names, lgbt_data) {
+
+  console.log("data", lgbt_data)
+  countries_lgbt = []
+  for(var cc in lgbt_data){
+    countries_lgbt[lgbt_data[cc]["name"].trim()] = lgbt_data[cc]["score"]
+  }
+  console.log("countires_lgbt",countries_lgbt)
 
   var countries = topojson.object(world, world.objects.countries).geometries,
       neighbors = topojson.neighbors(world, countries),
@@ -83,7 +96,6 @@ function ready(error, world, names) {
       n = countries.length;
 
   countries.forEach(function(d) { 
-    console.log(d)
     d.name = names.filter(function(n) { return d.id == n.id; })[0].name; 
   });
 
@@ -96,7 +108,11 @@ var country = svg.selectAll(".country").data(countries);
       .attr("title", function(d,i) { return d.name; })
       .attr("d", path)
       .style("fill", function(d, i) { 
-        return color(Math.random())
+        if (d.name in countries_lgbt){
+          return color(countries_lgbt[d.name.trim()] + 0.01)
+        }else{
+          return "grey"
+        }
       })
 
     //Show/hide tooltip
@@ -107,7 +123,7 @@ var country = svg.selectAll(".country").data(countries);
         tooltip
           .classed("hidden", false)
           .attr("style", "left:"+(mouse[0]+25)+"px;top:"+mouse[1]+"px")
-          .html(d.name)
+          .html(d.name + ", score: " + Math.round(100*countries_lgbt[d.name]) + "%")
       })
       .on("mouseout",  function(d,i) {
         tooltip.classed("hidden", true)
