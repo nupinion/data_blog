@@ -2,7 +2,10 @@
 
 ## Elasticsearch
 
+
 ~~~
+curl -XDELETE http://127.0.0.1:9200/enron
+
 curl -XPOST http://127.0.0.1:9200/enron -d '{
     "mappings" : {
         "emails": {

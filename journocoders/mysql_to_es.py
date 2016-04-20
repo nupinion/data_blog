@@ -35,13 +35,15 @@ for mid in message_ids:
 		else:
 			line2[message_cols[dd]] = curr_message[dd]
 	#connect to recipient
-	cursor.execute('select rvalue from recipientinfo where recipientinfo.mid = '+ str(mid) +';')
-	recipients = [i[0] for i in cursor.fetchall()] 
+	cursor.execute('select rvalue,rtype from recipientinfo where recipientinfo.mid = '+ str(mid) +';')
+	recipients = [[i[0],i[1]] for i in cursor.fetchall()] 
 	print "the recipients"
 	all_recipients = []
-	for recipient in recipients:
+	for curr_recipient in recipients:
 		tmp = dict()
+		recipient = curr_recipient[0]
 		tmp["email"] = recipient
+		tmp["type"] = curr_recipient[1]
 		cursor.execute('select * from employeelist where (employeelist.Email_id = "'+ recipient +'") OR (employeelist.Email2 = "'+ recipient +'") OR (employeelist.Email3 = "'+ recipient +'") OR (employeelist.Email4 = "'+ recipient +'");')
 		employee_info = cursor.fetchall()
 		if len(employee_info) > 0:
@@ -61,10 +63,9 @@ for mid in message_ids:
 	with open("dump.jsonl", "a") as myfile:
 		myfile.write(line1 + "\n")
 		myfile.write(json.dumps(line2) + "\n")
-	if mcount > 100:
-		break
 	if mcount % 50000 == 0:
-		break
+		'curl -s -XPOST http://127.0.0.1:9200/enron/emails/_bulk --data-binary "@dump.jsonl"'
+		os.system("rm dump.jsonl")
 		#read to es via bulk load
 		#delete dump.jsonl
 		# break
