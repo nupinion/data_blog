@@ -1,5 +1,6 @@
 ## MySQL
 
+Link for download from: https://opendata.stackexchange.com/questions/3802/enron-email-dataset-in-mysql
 Description of data: http://www.ahschulz.de/enron-email-data/
 
 General setup: https://stackoverflow.com/questions/17666249/how-to-import-an-sql-file-using-the-command-line-in-mysql
